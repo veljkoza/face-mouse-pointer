@@ -4,19 +4,23 @@ body {
 	height: 100vh;
 	margin: 0;
 	padding: 0;
-	box-sizing: border-box;
+    box-sizing: border-box;
+    background-image: linear-gradient(rgb(205, 248, 244),rgb(184, 255, 248));
 }
 .faces-container {
-	display: flex;
+    width: 700px;
+    height: auto;
+    display: flex;
     flex-wrap: wrap;
+    gap: 0.2rem;
     justify-content: center;
-    width: 60%;
-	gap: 0.3rem;
+    align-items: center;
 }
 .face-container {
-	height: 200px;
-	width: 150px;
-	position: relative;
+	min-height: 135px;
+	min-width: 100px;
+    position: relative;
+    display: inline-block;
 }
 .face-container:hover :not(:first-child) {
     display: none;
@@ -26,8 +30,8 @@ body {
 	display: block !important;
 }
 .face-container img {
-	width: auto;
-	height: 100%;
+	width: 100%;
+	height: auto;
 	position: absolute;
 	display: none;
 }
