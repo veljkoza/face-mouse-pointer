@@ -1,30 +1,42 @@
 console.log('YEST');
-const faceContainer = document.getElementsByClassName('face-container')[0];
+const faceContainers = document.getElementsByClassName('face-container');
 
-const faceXPosition =
-	faceContainer.getBoundingClientRect().x + faceContainer.getBoundingClientRect().width / 2;
-const faceYPosition =
-	faceContainer.getBoundingClientRect().y + faceContainer.getBoundingClientRect().height / 2;
+// const faceXPosition =
+// 	faceContainer.getBoundingClientRect().x + faceContainer.getBoundingClientRect().width / 2;
+// const faceYPosition =
+// 	faceContainer.getBoundingClientRect().y + faceContainer.getBoundingClientRect().height / 2;
 
 onmousemove = function (e) {
-	getTheAngle(e);
+	// getTheAngle(e);
+	// const props = {e,faceContainer: faceContainers[0]}
+	Array.from(faceContainers).forEach(face=>{
+		let props = {e,faceContainer:face};
+		getTheAngle(props)
+
+	})
+	// const allFaces = [...faceContainers.children];
 	// console.log('mouse location:', e.clientX, e.clientY);
 };
-onclick = () => {
-	console.log(faceContainer.getBoundingClientRect().x + faceContainer.getBoundingClientRect().width / 2);
-	console.log(faceContainer.getBoundingClientRect().y + faceContainer.getBoundingClientRect().height / 2);
-};
+// onclick = () => {
+// 	console.log(faceContainer.getBoundingClientRect().x + faceContainer.getBoundingClientRect().width / 2);
+// 	console.log(faceContainer.getBoundingClientRect().y + faceContainer.getBoundingClientRect().height / 2);
+// };
 
 
-const getTheAngle = e => {
-	const mouseXPosition = e.clientX;
-	const mouseYPosition = e.clientY;
+const getTheAngle = props => {
+	console.log(props.faceContainer.getBoundingClientRect().y)
+	const mouseYPosition = props.e.clientY;
+	const mouseXPosition = props.e.clientX;
+	const faceYPosition = props.faceContainer.getBoundingClientRect().y + props.faceContainer.getBoundingClientRect().height / 2;
+	const faceXPosition = props.faceContainer.getBoundingClientRect().x + props.faceContainer.getBoundingClientRect().width / 2;
+
 	let adjacent;
 	let opposite;
 	let arctan;
 	let angleBetweenFaceAndMouse;
 
-	let quadrant = whichQuadrant(mouseXPosition, mouseYPosition);
+	let quadrant = whichQuadrant(mouseXPosition, mouseYPosition,faceXPosition,faceYPosition);
+	const images = [...props.faceContainer.children]
 	switch (quadrant) {
 		case 1:
 			adjacent = faceXPosition - mouseXPosition;
@@ -32,12 +44,12 @@ const getTheAngle = e => {
 			arctan = Math.atan(opposite / adjacent);
 			angleBetweenFaceAndMouse = (arctan * 180) / Math.PI;
 			if (angleBetweenFaceAndMouse >= 0 && angleBetweenFaceAndMouse<=20 ) {
-				showPicture('left');
+				showPicture({direction:'left',images});
 			}
 			else if (angleBetweenFaceAndMouse > 20 && angleBetweenFaceAndMouse<= 70) {
-				showPicture('upperLeft');
+				showPicture({direction:'upperLeft',images});
 			} else {
-				showPicture('up');
+				showPicture({direction:'up',images});
 			}
 			break;
 		case 2:
@@ -46,12 +58,12 @@ const getTheAngle = e => {
 			arctan = Math.atan(opposite / adjacent);
 			angleBetweenFaceAndMouse = (arctan * 180) / Math.PI;
 			if (angleBetweenFaceAndMouse >= 0 && angleBetweenFaceAndMouse<=20 ) {
-				showPicture('right');
+				showPicture({direction:'right',images});
 			}
 			else if (angleBetweenFaceAndMouse > 20 && angleBetweenFaceAndMouse<= 70) {
-				showPicture('upperRight');
+				showPicture({direction:'upperRight',images});
 			} else {
-				showPicture('up');
+				showPicture({direction:'up',images});
 			}
 			break;
 		case 3:
@@ -60,12 +72,12 @@ const getTheAngle = e => {
 			arctan = Math.atan(opposite / adjacent);
 			angleBetweenFaceAndMouse = (arctan * 180) / Math.PI;
 			if (angleBetweenFaceAndMouse >= 0 && angleBetweenFaceAndMouse<=20 ) {
-				showPicture('right');
+				showPicture({direction:'right',images});
 			}
 			else if (angleBetweenFaceAndMouse > 20 && angleBetweenFaceAndMouse<= 70) {
-				showPicture('bottomRight');
+				showPicture({direction:'bottomRight',images});
 			} else {
-				showPicture('bottom');
+				showPicture({direction:'bottom',images});
 			}
 			break;
 		case 4:
@@ -74,12 +86,12 @@ const getTheAngle = e => {
 			arctan = Math.atan(opposite / adjacent);
 			angleBetweenFaceAndMouse = (arctan * 180) / Math.PI;
 			if (angleBetweenFaceAndMouse >= 0 && angleBetweenFaceAndMouse<=20 ) {
-				showPicture('left');
+				showPicture({direction:'left',images});
 			}
 			else if (angleBetweenFaceAndMouse > 20 && angleBetweenFaceAndMouse<= 70) {
-				showPicture('bottomLeft');
+				showPicture({direction:'bottomLeft',images});
 			} else {
-				showPicture('bottom');
+				showPicture({direction:'bottom',images});
 			}
 			break;
 	}
@@ -96,10 +108,10 @@ const getTheAngle = e => {
 	// console.log(angleBetweenFaceAndMouse);
 };
 
-const showPicture = direction => {
-	const url = `http://127.0.0.1:5500/_assets/${direction}.jpg`;
+const showPicture = props => {
+	const url = `http://127.0.0.1:5500/_assets/${props.direction}.jpg`;
 	// console.log(url);
-	[...faceContainer.children].forEach(image => {
+	props.images.forEach(image => {
 		let tempImage;
 		if (image.src !== url) {
 			tempImage = image;
@@ -112,25 +124,25 @@ const showPicture = direction => {
 	});
 };
 
-const whichQuadrant = (x, y) => {
+const whichQuadrant = (x, y,fx,fy) => {
 	// console.log('x:' + x);
 	// console.log('y:' + y);
 	// console.log(`x${x} misha vece od x${faceXPosition} face:` + (x > faceXPosition));
 	// console.log(`y${y} misha vece od y${faceYPosition} face:` + (y > faceYPosition));
 
-	if (x < faceXPosition && y < faceYPosition) {
+	if (x < fx && y < fy) {
 		// console.log('Prvi kvadrant');
 		return 1;
 	}
-	if (x > faceXPosition && y < faceYPosition) {
+	if (x > fx && y < fy) {
 		// console.log('Drugi kvadrant');
 		return 2;
 	}
-	if (x > faceXPosition && y > faceYPosition) {
+	if (x > fx && y > fy) {
 		// console.log('Treci kvadrant');
 		return 3;
 	}
-	if (x < faceXPosition && y > faceYPosition) {
+	if (x < fx && y > fy) {
 		// console.log('Cetvrti kvadrant');
 		return 4;
 	}

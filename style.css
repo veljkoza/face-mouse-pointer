@@ -8,12 +8,14 @@ body {
 }
 .faces-container {
 	display: flex;
-	flex-wrap: wrap;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 60%;
 	gap: 0.3rem;
 }
 .face-container {
 	height: 200px;
-	width: 200px;
+	width: 150px;
 	position: relative;
 }
 .face-container:hover :not(:first-child) {
@@ -24,8 +26,8 @@ body {
 	display: block !important;
 }
 .face-container img {
-	width: 100%;
-	height: auto;
+	width: auto;
+	height: 100%;
 	position: absolute;
 	display: none;
 }
